@@ -67,5 +67,12 @@ class BlogCategoriesController extends Controller
         return redirect('/admin/blog/categories');
     }
 
+     public function delete($id)
+    {
+        $blog = BlogCategory::findOrFail($id);
+        $blog->delete();
+        return redirect()->route('admin.blog.categories.index')->with('success', 'Blog Category deleted successfully!');
+    }
+
 
 }
