@@ -46,9 +46,10 @@
                                                             <td class="text-left">{{ $category->title }}</td>
                                                             <td class="text-center">{{ $category->blog_count }}</td>
                                                             <td>
-                                                                    <a href="/admin/blog/categories/{{ $category->id }}/edit" class="btn-transparent text-primary" data-toggle="tooltip" data-placement="top" title="{{ trans('admin/main.edit') }}">
-                                                                        <i class="fa fa-edit"></i>
-                                                                    </a>
+                                                                <a href="{{ route('admin.blog.categories.edit', $category->id) }}" class="btn btn-warning text-white">Edit</a>
+                                                                <a href="javascript:void(0);" class="btn btn-danger text-white delete-btn" data-url="{{ route('admin.blog.categories.delete', $category->id) }}">
+                                                                    Delete
+                                                                </a>
                                                             </td>
                                                         </tr>
                                                     @endforeach
@@ -58,7 +59,7 @@
                                     <!-- @endif -->
 
                                     <div class="tab-pane mt-3 fade {{ ((!empty($errors) and $errors->has('title')) or !empty($editCategory)) ? 'active show' : '' }}" id="newCategory" role="tabpanel" aria-labelledby="newCategory-tab">
-                                        <form action="/admin/blog/categories/{{ !empty($editCategory) ? $editCategory->id.'/update' : 'store' }}" method="post">    
+                                        <form action="{{ isset($editCategory) ? route('admin.blog.categories.update', $editCategory) : route('admin.blog.categories.store') }}" method="post">    
                                             <div class="row">
                                                 <div class="col-12 col-md-6">
                                                     {{ csrf_field() }}
@@ -98,5 +99,6 @@
                 </div>
             </div>
         </div>
+        @include('admin.includes.deletepopup')
     </section>
 @endsection

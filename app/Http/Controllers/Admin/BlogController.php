@@ -15,7 +15,7 @@ class BlogController extends Controller
      */
     public function index()
     {
-        $blogs = Blog::orderBy('id', 'desc')->get();
+        $blogs = Blog::orderBy('id', 'desc')->paginate(10);
         return view('admin.blog.index', compact('blogs'));
     }
 
@@ -36,10 +36,10 @@ class BlogController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required',
-            'mini_description' => 'nullable|string|max:255',
+            'mini_description' => 'nullable|string|max:500',
             'category_id' => 'required|exists:blog_categories,id',
-            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'thumbnail_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:1024',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4048',
+            'thumbnail_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2024',
             'status' => 'required|in:active,inactive',
             'is_featured' => 'boolean',
         ]);
@@ -83,10 +83,10 @@ class BlogController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required',
-            'mini_description' => 'nullable|string|max:255',
+            'mini_description' => 'nullable|string|max:500',
             'category_id' => 'required|exists:blog_categories,id',
-            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'thumbnail_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:1024',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4048',
+            'thumbnail_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'status' => 'required|in:active,inactive',
             'is_featured' => 'boolean',
         ]);
@@ -122,15 +122,5 @@ class BlogController extends Controller
         $blog = Blog::findOrFail($id);
         $blog->delete();
         return redirect()->route('admin.blog.index')->with('success', 'Blog deleted successfully!');
-    }
-
-    /**
-     * Search for blogs based on a keyword.
-     */
-    public function search(Request $request)
-    {
-        $query = $request->input('query');
-        $blogs = Blog::where('title', 'like', "%$query%")->orWhere('description', 'like', "%$query%")->get();
-        return view('admin.blog.index', compact('blogs'));
     }
 }
